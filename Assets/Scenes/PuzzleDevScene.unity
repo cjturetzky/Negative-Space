@@ -328,6 +328,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: 
   rotateAngle: 45
+  smooth: 10
 --- !u!1 &543371913
 GameObject:
   m_ObjectHideFlags: 0

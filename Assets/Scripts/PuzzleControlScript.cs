@@ -6,15 +6,15 @@ public class PuzzleControlScript : MonoBehaviour
 {
     public int rotateAngle = 45;
     public float smooth = 1f;
-    private Quaternion targetRotation;
-    private Quaternion initialRotation;
-    Vector3 rotateX;
-    Vector3 rotateY;
-    Vector3 rotateZ;
+    private Transform targetRotation;
+    private Transform initialRotation;
+    private GameObject targetHolder;
     // Start is called before the first frame update
     void Start()
     {
-        targetRotation = transform.rotation;
+        targetHolder = Instantiate(this.gameObject);
+        targetHolder.SetActive(false);
+        targetRotation = targetHolder.transform;
         initialRotation = targetRotation;
     }
 
@@ -22,33 +22,33 @@ public class PuzzleControlScript : MonoBehaviour
     void Update()
     {
         if(Input.GetKeyDown("w")){
-            //transform.Rotate(rotateX, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.right);
+            targetHolder.transform.Rotate(Vector3.right * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.right);
         }
         else if(Input.GetKeyDown("s")){
-            //transform.Rotate(-rotateX, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.left);
+            targetHolder.transform.Rotate(Vector3.left * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.left);
         }
         else if(Input.GetKeyDown("a")){
-            //transform.Rotate(rotateZ, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.up);
+            targetHolder.transform.Rotate(Vector3.up * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.up);
         }
         else if(Input.GetKeyDown("d")){
-            //transform.Rotate(-rotateZ, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.down);
+            targetHolder.transform.Rotate(Vector3.down * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.down);
         }
         else if(Input.GetKeyDown("q")){
-            //transform.Rotate(rotateY, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.forward);
+            targetHolder.transform.Rotate(Vector3.forward * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.forward);
         }
         else if(Input.GetKeyDown("e")){
-            //transform.Rotate(-rotateY, Space.World);
-            targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.back);
+            targetHolder.transform.Rotate(Vector3.back * rotateAngle, Space.World);
+            //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.back);
         }
         else if(Input.GetKeyDown("r")){
-            targetRotation = initialRotation;
+            targetHolder.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
         // Smoothly rotate object to match targetRotation
-        transform.rotation = Quaternion.Lerp (transform.rotation, targetRotation, smooth * Time.deltaTime); 
+        transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
     }
 }
