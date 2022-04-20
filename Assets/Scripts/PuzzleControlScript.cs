@@ -7,6 +7,7 @@ public class PuzzleControlScript : MonoBehaviour
     public int rotateAngle = 45;
     public float smooth = 1f;
     private Quaternion targetRotation;
+    private Quaternion initialRotation;
     Vector3 rotateX;
     Vector3 rotateY;
     Vector3 rotateZ;
@@ -14,6 +15,7 @@ public class PuzzleControlScript : MonoBehaviour
     void Start()
     {
         targetRotation = transform.rotation;
+        initialRotation = targetRotation;
     }
 
     // Update is called once per frame
@@ -43,7 +45,9 @@ public class PuzzleControlScript : MonoBehaviour
             //transform.Rotate(-rotateY, Space.World);
             targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.back);
         }
-
+        else if(Input.GetKeyDown("r")){
+            targetRotation = initialRotation;
+        }
         // Smoothly rotate object to match targetRotation
         transform.rotation = Quaternion.Lerp (transform.rotation, targetRotation, smooth * Time.deltaTime); 
     }
