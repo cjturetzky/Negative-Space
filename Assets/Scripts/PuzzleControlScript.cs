@@ -6,6 +6,7 @@ public class PuzzleControlScript : MonoBehaviour
 {
     public int rotateAngle = 45;
     public float smooth = 1f;
+    public Vector3 correctRotation = new Vector3(90, 45, 0);
     private Transform targetRotation;
     private Transform initialRotation;
     private GameObject targetHolder;
@@ -50,5 +51,12 @@ public class PuzzleControlScript : MonoBehaviour
         }
         // Smoothly rotate object to match targetRotation
         transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
+        CheckRotation();
+    }
+
+    void CheckRotation(){
+        if(transform.rotation.eulerAngles == correctRotation){
+            Debug.Log("Solved!");
+        }
     }
 }

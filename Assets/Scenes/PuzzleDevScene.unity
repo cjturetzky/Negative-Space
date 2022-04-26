@@ -390,3 +390,4 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   rotateAngle: 45
   smooth: 10
+  correctRotation: {x: 45, y: 90, z: 0}
