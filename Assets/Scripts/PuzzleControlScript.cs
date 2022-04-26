@@ -7,9 +7,18 @@ public class PuzzleControlScript : MonoBehaviour
     public int rotateAngle = 45;
     public float smooth = 1f;
     public Vector3 correctRotation = new Vector3(90, 45, 0);
+    // Symmetries: 1, 45, 90, 180, 360
+    // 1 = all rotations valid, 360 = one rotation valid
+    public Vector3 symmetries = new Vector3(360, 360, 360);
+    public bool xSolve = false;
+    public bool ySolve = false;
+    public bool zSolve = true;
     private Transform targetRotation;
     private Transform initialRotation;
     private GameObject targetHolder;
+    public delegate void SolveDelegate();
+    public event SolveDelegate solveEvent;
+    // To subscribe to the solveEvent, use FindObjectOfType<PuzzleControlScript>().solveEvent += [YOUR METHOD HERE];
     // Start is called before the first frame update
     void Start()
     {
@@ -52,11 +61,32 @@ public class PuzzleControlScript : MonoBehaviour
         // Smoothly rotate object to match targetRotation
         transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
         CheckRotation();
+        if(xSolve && ySolve && zSolve){
+            Debug.Log("Solved!");
+            if(solveEvent != null){
+                solveEvent();
+            }
+        }
     }
 
     void CheckRotation(){
-        if(transform.rotation.eulerAngles == correctRotation){
-            Debug.Log("Solved!");
+        if(transform.eulerAngles.x % symmetries.x == correctRotation.x % symmetries.x){
+            xSolve = true;
+        }
+        else{
+            xSolve = false;
+        }
+        if(transform.eulerAngles.y % symmetries.y == correctRotation.y % symmetries.y){
+            ySolve = true;
+        }
+        else{
+            ySolve = false;
+        }
+        if(transform.eulerAngles.z % symmetries.z == correctRotation.z % symmetries.z){
+            zSolve = true;
+        }
+        else{
+            zSolve = false;
         }
     }
 }
