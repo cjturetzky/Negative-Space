@@ -60,8 +60,7 @@ public class PuzzleControlScript : MonoBehaviour
         }
         // Smoothly rotate object to match targetRotation
         transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
-        CheckRotation();
-        if(xSolve && ySolve && zSolve){
+        if(CheckRotation()){
             Debug.Log("Solved!");
             if(solveEvent != null){
                 solveEvent();
@@ -69,24 +68,27 @@ public class PuzzleControlScript : MonoBehaviour
         }
     }
 
-    void CheckRotation(){
-        if(transform.eulerAngles.x % symmetries.x == correctRotation.x % symmetries.x){
-            xSolve = true;
-        }
-        else{
-            xSolve = false;
-        }
-        if(transform.eulerAngles.y % symmetries.y == correctRotation.y % symmetries.y){
-            ySolve = true;
-        }
-        else{
-            ySolve = false;
-        }
-        if(transform.eulerAngles.z % symmetries.z == correctRotation.z % symmetries.z){
-            zSolve = true;
-        }
-        else{
-            zSolve = false;
-        }
+    bool CheckRotation(){
+        return(transform.rotation.eulerAngles == correctRotation);
+        // if(transform.eulerAngles.x % symmetries.x == correctRotation.x % symmetries.x){
+        //     xSolve = true;
+        // }
+        // else{
+        //     xSolve = false;
+        // }
+        // if(transform.eulerAngles.y % symmetries.y == correctRotation.y % symmetries.y){
+        //     ySolve = true;
+        // }
+        // else{
+        //     ySolve = false;
+        // }
+        // if(transform.eulerAngles.z % symmetries.z == correctRotation.z % symmetries.z){
+        //     zSolve = true;
+        // }
+        // else{
+        //     zSolve = false;
+        // }
+
+        // return (xSolve && ySolve && zSolve);
     }
 }
