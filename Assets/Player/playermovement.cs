@@ -32,6 +32,5 @@ public class playermovement : MonoBehaviour
         move.y = vSpeed;
         
         controller.Move(move * speed * Time.deltaTime);
-
     }
 }
