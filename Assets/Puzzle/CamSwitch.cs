@@ -19,6 +19,7 @@ public class CamSwitch : MonoBehaviour
      myCamera.SetActive(false);
 
      myPosition = myCamera.transform;
+     playerController.enabled = true;
     }
     
     void Update()
