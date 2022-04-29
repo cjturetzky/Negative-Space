@@ -6,13 +6,13 @@ public class PuzzleControlScript : MonoBehaviour
 {
     public int rotateAngle = 45;
     public float smooth = 1f;
-    public Vector3 correctRotation = new Vector3(90, 45, 0);
+    public Vector3 correctRotation = new Vector3(0, 0, 0);
     // Symmetries: 1, 45, 90, 180, 360
     // 1 = all rotations valid, 360 = one rotation valid
     public Vector3 symmetries = new Vector3(360, 360, 360);
     public bool xSolve = false;
     public bool ySolve = false;
-    public bool zSolve = true;
+    public bool zSolve = false;
     private Transform targetRotation;
     private Transform initialRotation;
     private GameObject targetHolder;
