@@ -2,17 +2,21 @@ using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 
-public class NewBehaviourScript : MonoBehaviour
+public class TriggerDoorController : MonoBehaviour
 {
-    // Start is called before the first frame update
-    void Start()
-    {
-        
-    }
+    [SerializeField] private Animator myDoor = null;
+	
+	public bool unlocked = false;
 
-    // Update is called once per frame
-    void Update()
-    {
-        
-    }
+	private void OnTriggerEnter(Collider col){
+		if(col.CompareTag("Player") && unlocked){
+			myDoor.Play("DoorOpen",0,0.0f);
+		}
+	}
+
+	private void OnTriggerExit(Collider col){
+		if(col.CompareTag("Player") && unlocked){
+			myDoor.Play("DoorClose",0,0.0f);
+		}
+	}
 }
