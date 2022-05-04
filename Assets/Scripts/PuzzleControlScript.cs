@@ -7,15 +7,11 @@ public class PuzzleControlScript : MonoBehaviour
     public int rotateAngle = 45;
     public float smooth = 1f;
     public Vector3 correctRotation = new Vector3(90, 45, 0);
-    // Symmetries: 1, 45, 90, 180, 360
-    // 1 = all rotations valid, 360 = one rotation valid
     public Vector3 symmetries = new Vector3(360, 360, 360);
-    public bool xSolve = false;
-    public bool ySolve = false;
-    public bool zSolve = true;
     private Transform targetRotation;
     private Transform initialRotation;
     private GameObject targetHolder;
+    private GameObject solutionHolder;
     public delegate void SolveDelegate();
     public event SolveDelegate solveEvent;
     // To subscribe to the solveEvent, use FindObjectOfType<PuzzleControlScript>().solveEvent += [YOUR METHOD HERE];
@@ -23,6 +19,9 @@ public class PuzzleControlScript : MonoBehaviour
     void Start()
     {
         targetHolder = Instantiate(this.gameObject);
+        solutionHolder = Instantiate(this.gameObject);
+        solutionHolder.transform.Rotate(correctRotation, Space.World);
+        solutionHolder.SetActive(false);
         targetHolder.SetActive(false);
         targetRotation = targetHolder.transform;
         initialRotation = targetRotation;
@@ -69,26 +68,6 @@ public class PuzzleControlScript : MonoBehaviour
     }
 
     bool CheckRotation(){
-        return(transform.rotation.eulerAngles == correctRotation);
-        // if(transform.eulerAngles.x % symmetries.x == correctRotation.x % symmetries.x){
-        //     xSolve = true;
-        // }
-        // else{
-        //     xSolve = false;
-        // }
-        // if(transform.eulerAngles.y % symmetries.y == correctRotation.y % symmetries.y){
-        //     ySolve = true;
-        // }
-        // else{
-        //     ySolve = false;
-        // }
-        // if(transform.eulerAngles.z % symmetries.z == correctRotation.z % symmetries.z){
-        //     zSolve = true;
-        // }
-        // else{
-        //     zSolve = false;
-        // }
-
-        // return (xSolve && ySolve && zSolve);
+        return(transform.rotation == solutionHolder.transform.rotation);
     }
 }
