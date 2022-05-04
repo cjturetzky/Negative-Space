@@ -17,14 +17,13 @@ public class CamSwitch : MonoBehaviour
     {
      playerCamera.SetActive(true); 
      myCamera.SetActive(false);
-
      myPosition = myCamera.transform;
     }
     
     void Update()
     {
         distanceToPlayer = (myPosition.position - playerCamera.transform.position).magnitude;
-        if (Input.GetKeyDown(KeyCode.E) && distanceToPlayer < 5)
+        if (Input.GetKeyDown(KeyCode.C) && distanceToPlayer < 5)
         {
             playerCamera.SetActive(false);
             myCamera.SetActive(true);
