@@ -33,21 +33,25 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
             input = true;
             targetHolder.transform.Rotate(Vector3.right * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.right);
+            
         }
         else if(Input.GetKeyUp("s")){
             input = true;
             targetHolder.transform.Rotate(Vector3.left * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.left);
+            
         }
         else if(Input.GetKeyUp("a")){
             input = true;
             targetHolder.transform.Rotate(Vector3.up * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.up);
+            
         }
         else if(Input.GetKeyUp("d")){
             input = true;
             targetHolder.transform.Rotate(Vector3.down * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.down);
+            
         }
         
         /*else if(Input.GetKeyUp("q")){
@@ -67,27 +71,25 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
         }
         
         // Smoothly rotate object to match targetRotation
-        transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
+        transform.rotation = Quaternion.Slerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
        
-        if(input){
-            if(CheckRotation()){
+        if(CheckRotation()){
                 Debug.Log("Solved!");
                 if(solveEvent != null){
                     solveEvent();
                 }
-            }
         }
         input = false;
     }
     
      bool CheckRotation(){
 
-        float x = targetHolder.transform.rotation.eulerAngles.x;
-        float y = targetHolder.transform.rotation.eulerAngles.y;
-        float z = targetHolder.transform.rotation.eulerAngles.z;
+        float x = targetHolder.transform.localRotation.eulerAngles.x;
+        float y = targetHolder.transform.localRotation.eulerAngles.y;
+        float z = targetHolder.transform.localRotation.eulerAngles.z;
         
         Debug.Log(x + " " + y + " " + z);
-        if(x < 10 && x > -10 && y < 10 && y < -10 && z > 10 && z < -10){
+        if(x < 10 && x > -10 && y < 10 && y > -10 && z < 10 && z > -10){
             return true;
         }
 
