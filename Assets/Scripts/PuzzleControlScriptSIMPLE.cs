@@ -1,7 +1,9 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using Unity.Mathematics;
 using UnityEngine;
+using UnityEngine.SocialPlatforms;
 using UnityEngine.UIElements;
 
 public class PuzzleControlScriptSIMPLE : MonoBehaviour
@@ -61,7 +63,7 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
         
         else if(Input.GetKeyDown("r")){
             input = true;
-            targetHolder.transform.rotation = new Quaternion(0, 0, 0, 0);
+            targetHolder.transform.localRotation = quaternion.identity;
         }
         
         // Smoothly rotate object to match targetRotation
