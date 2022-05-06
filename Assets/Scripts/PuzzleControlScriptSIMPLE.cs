@@ -20,7 +20,7 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
     
     void Start()
     {
-        targetHolder = Instantiate(this.gameObject);
+        targetHolder = Instantiate(gameObject,  gameObject.transform.position, gameObject.transform.rotation);
         targetHolder.SetActive(false);
     }
 
@@ -47,7 +47,8 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
             targetHolder.transform.Rotate(Vector3.down * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.down);
         }
-        else if(Input.GetKeyUp("q")){
+        
+        /*else if(Input.GetKeyUp("q")){
             input = true;
             targetHolder.transform.Rotate(Vector3.forward * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.forward);
@@ -56,14 +57,40 @@ public class PuzzleControlScriptSIMPLE : MonoBehaviour
             input = true;
             targetHolder.transform.Rotate(Vector3.back * rotateAngle, Space.World);
             //targetRotation *=  Quaternion.AngleAxis(rotateAngle, Vector3.back);
-        }
+        }*/
+        
         else if(Input.GetKeyDown("r")){
             input = true;
             targetHolder.transform.rotation = new Quaternion(0, 0, 0, 0);
         }
+        
         // Smoothly rotate object to match targetRotation
         transform.rotation = Quaternion.Lerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime); 
        
+        if(input){
+            if(CheckRotation()){
+                Debug.Log("Solved!");
+                if(solveEvent != null){
+                    solveEvent();
+                }
+            }
+        }
         input = false;
     }
+    
+     bool CheckRotation(){
+
+        float x = targetHolder.transform.rotation.eulerAngles.x;
+        float y = targetHolder.transform.rotation.eulerAngles.y;
+        float z = targetHolder.transform.rotation.eulerAngles.z;
+        
+        Debug.Log(x + " " + y + " " + z);
+        if(x < 10 && x > -10 && y < 10 && y < -10 && z > 10 && z < -10){
+            return true;
+        }
+
+        return false;
+    }
+     
+     
 }
