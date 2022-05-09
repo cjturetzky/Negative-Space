@@ -1,6 +1,7 @@
 using System;
 using System.Collections;
 using System.Collections.Generic;
+using TMPro.EditorUtilities;
 using Unity.Mathematics;
 using UnityEngine;
 using UnityEngine.SocialPlatforms;
@@ -8,28 +9,38 @@ using UnityEngine.UIElements;
 
 public class PuzzleController : MonoBehaviour
 {
-    public int rotateAngle = 45;
+    public int rotateAngle = 45, doorsUnlocked = 1;
     public float smooth = 1f;
     public bool locked = true;
     public Vector3 correctRotation = Vector3.zero, offset = Vector3.zero;
     
     private float _tempAngle;
     private Vector3 _axis = Vector3.zero;
-    private bool _active = false;
-    
-    public delegate void SolveDelegate();
+    private Queue<Vector3> _queuedAxes;
+
+    public delegate void SolveDelegate(int data);
     public event SolveDelegate solveEvent;
-    // To subscribe to the solveEvent, use FindObjectOfType<PuzzleControlScript>().solveEvent += [YOUR METHOD HERE];
+    // To subscribe to the solveEvent, use FindObjectOfType<PuzzleController>().solveEvent += [YOUR METHOD HERE];
+
+    private void Start()
+    {
+        _queuedAxes = new Queue<Vector3>();
+    }
 
     private void RotateAxis()
     {
-        transform.Rotate(rotateAngle * Time.fixedDeltaTime * _axis, Space.World);
+        transform.Rotate(rotateAngle * Time.fixedDeltaTime * _axis * smooth, Space.World);
         _tempAngle += rotateAngle * Time.fixedDeltaTime;
 
         if (_tempAngle >= rotateAngle)
         {
             _tempAngle = 0f;
-            _active = false;
+
+            if (_queuedAxes.Count > 0)
+            {
+                _axis = _queuedAxes.Peek();
+                _queuedAxes.Dequeue();
+            }
         }
     }
 
@@ -38,43 +49,38 @@ public class PuzzleController : MonoBehaviour
     {
         if (locked) return;
         
-        if (_active)
+        if (_queuedAxes.Count > 0)
         {
             RotateAxis();
             
             if (CheckRotation())
             {
                 locked = true;
-                solveEvent?.Invoke();
+                solveEvent?.Invoke(doorsUnlocked);
             }
-            
-            return;
         }
         
-        if (Input.GetKeyUp("w"))
+        if (Input.GetKeyDown("w"))
         {
-            _active = true;
-            _axis = Vector3.up;
+            _queuedAxes.Enqueue(Vector3.up);
         }
-        else if (Input.GetKeyUp("s"))
+        else if (Input.GetKeyDown("s"))
         {
-            _active = true;
-            _axis = Vector3.down;
+            _queuedAxes.Enqueue(Vector3.down);
         }
-        else if (Input.GetKeyUp("a"))
+        else if (Input.GetKeyDown("a"))
         {
-            _active = true;
-            _axis = Vector3.left;
+            _queuedAxes.Enqueue(Vector3.left);
         }
-        else if (Input.GetKeyUp("d"))
+        else if (Input.GetKeyDown("d"))
         {
-            _active = true;
-            _axis = Vector3.right;
+            _queuedAxes.Enqueue(Vector3.right);
         }
         else if (Input.GetKeyDown("r"))
         {
             transform.rotation = quaternion.identity;
-            _active = true;
+            _queuedAxes.Clear();
+            _axis = Vector3.zero;
         }
     }
 

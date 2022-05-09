@@ -1,3 +1,4 @@
+using System;
 using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
@@ -5,14 +6,24 @@ using UnityEngine;
 public class DoorManager : MonoBehaviour
 {
     private int doorNum = 1;
-    // Update is called once per frame
-    void Update()
+
+    private void Start()
     {
-        if (Input.GetKeyDown(KeyCode.Space))
+        foreach (var puzzle in FindObjectsOfType<PuzzleController>())
         {
+            puzzle.solveEvent += OpenDoor;
+        }
+    }
+
+    private void OpenDoor(int doors)
+    {
+        for (var i = 0; i < doors; i++)
+        {
+            doorNum += i;
             Debug.Log("Door " + doorNum + " unlocked");
             GameObject.Find("DoorTrigger_" + doorNum).GetComponent<TriggerDoorController>().unlocked = true;
-            doorNum++;
         }
+
+        doorNum++;
     }
 }
