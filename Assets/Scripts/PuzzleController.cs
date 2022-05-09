@@ -86,9 +86,10 @@ public class PuzzleController : MonoBehaviour
 
     private bool CheckRotation()
     {
-        var x = transform.localRotation.eulerAngles.x;
-        var y = transform.localRotation.eulerAngles.y;
-        var z = transform.localRotation.eulerAngles.z;
+        var localRotation = transform.localRotation;
+        var x = localRotation.eulerAngles.x;
+        var y = localRotation.eulerAngles.y;
+        var z = localRotation.eulerAngles.z;
         
         return x < correctRotation.x + 10 && x > correctRotation.x - 10 &&
                y < correctRotation.y + 10 && y > correctRotation.y - 10 &&
