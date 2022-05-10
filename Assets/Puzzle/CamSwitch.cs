@@ -11,52 +11,34 @@ public class CamSwitch : MonoBehaviour
 
     private float distanceToPlayer;
     private Transform myPosition;
-    private PuzzleController _puzzle;
-    private playermovement _player;
-
+    
 
     void Start()
     {
-        playerCamera.SetActive(true);
-        myCamera.SetActive(false);
-        myPosition = myCamera.transform;
-
-        _puzzle = GetComponent<PuzzleController>();
-        _puzzle.solveEvent += ExitPuzzle;
-        _player = GameObject.FindWithTag("Player").GetComponent<playermovement>();
+     playerCamera.SetActive(true); 
+     myCamera.SetActive(false);
+     myPosition = myCamera.transform;
     }
-
+    
     void Update()
     {
         distanceToPlayer = (myPosition.position - playerCamera.transform.position).magnitude;
         if (Input.GetKeyDown(KeyCode.C) && distanceToPlayer < 5)
         {
-            EnterPuzzle();
+            playerCamera.SetActive(false);
+            myCamera.SetActive(true);
+            playerController.enabled = false;
+            //disable player movement
         }
 
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            ExitPuzzle(0);
+            myCamera.SetActive(false);
+            playerCamera.SetActive(true);
+            playerController.enabled = true;
+            //enable player movement
         }
-    }
-
-    private void EnterPuzzle()
-    {
-        playerCamera.SetActive(false);
-        myCamera.SetActive(true);
-        playerController.enabled = false;
-        _player.inPuzzle = true;
-        _puzzle.locked = false;
-        //disable player movement
-    }
-
-    private void ExitPuzzle(int data)
-    {
-        myCamera.SetActive(false);
-        playerCamera.SetActive(true);
-        playerController.enabled = true;
-        _player.inPuzzle = false;
-        _puzzle.locked = true;
-        //enable player movement
+        
+        
     }
 }
