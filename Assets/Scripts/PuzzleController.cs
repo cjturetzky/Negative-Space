@@ -10,85 +10,97 @@ using UnityEngine.UIElements;
 public class PuzzleController : MonoBehaviour
 {
     public int rotateAngle = 45, doorsUnlocked = 1;
-    public float smooth = 1f;
+    public float smooth = 4f;
     public bool locked = true;
-    public Vector3 correctRotation = Vector3.zero, offset = Vector3.zero;
-
-    private float _tempAngle;
-    private Vector3 _axis = Vector3.zero;
-    private Queue<Vector3> _queuedAxes;
+    public Vector3 correctRotation = Vector3.zero;
     
+    private GameObject reset;
+    private GameObject targetHolder;
+    
+    public bool input;
+    private bool redo = false;
 
-    public delegate void SolveDelegate(int data);
-
+    public delegate void SolveDelegate(int data); 
     public event SolveDelegate solveEvent;
-    // To subscribe to the solveEvent, use FindObjectOfType<PuzzleController>().solveEvent += [YOUR METHOD HERE];
+    
+    private Vector3 oldEulerAngles;
 
     private void Start()
     {
-        _queuedAxes = new Queue<Vector3>();
+        targetHolder = Instantiate(gameObject,  gameObject.transform.position, gameObject.transform.rotation);
+        targetHolder.SetActive(false);
+        
+        reset = Instantiate(gameObject,  gameObject.transform.position, gameObject.transform.rotation);
+        reset.SetActive(false);
+        
+        oldEulerAngles = transform.rotation.eulerAngles;
     }
 
     private void RotateAxis()
     {
-        transform.Rotate(rotateAngle * Time.fixedDeltaTime * _axis * smooth, Space.World);
-        _tempAngle += rotateAngle * Time.fixedDeltaTime;
-
-        if (_tempAngle >= rotateAngle)
-        {
-            _tempAngle = 0f;
-
-            if (_queuedAxes.Count > 0)
-            {
-                _axis = _queuedAxes.Peek();
-                _queuedAxes.Dequeue();
-            }
-        }
+        transform.rotation = Quaternion.Slerp (transform.rotation, targetHolder.transform.rotation, smooth * Time.deltaTime);
     }
-
-    // Update is called once per frame
+    
+    private void Reset()
+    {
+        transform.rotation = Quaternion.Slerp (transform.rotation, reset.transform.rotation, smooth * Time.deltaTime);
+        targetHolder.transform.rotation = Quaternion.Slerp (transform.rotation, reset.transform.rotation, smooth * Time.deltaTime);
+    }
+    
     void Update()
     {
         if (locked) return;
-
-        if (_queuedAxes.Count > 0)
+        
+        if (CheckRotation())
         {
-            RotateAxis();
-
-            if (CheckRotation())
-            {
-                locked = true;
-                solveEvent?.Invoke(doorsUnlocked);
-            }
-        }
-
-        if (Input.GetKeyDown("w"))
-        {
-            _queuedAxes.Enqueue(Vector3.right);
-        }
-        else if (Input.GetKeyDown("s"))
-        {
-            _queuedAxes.Enqueue(Vector3.left);
-        }
-        else if (Input.GetKeyDown("a"))
-        {
-            _queuedAxes.Enqueue(Vector3.up);
-        }
-        else if (Input.GetKeyDown("d"))
-        {
-            _queuedAxes.Enqueue(Vector3.down);
-        }
-        else if (Input.GetKeyDown("r"))
-        {
-            transform.rotation = quaternion.identity;
-            _queuedAxes.Clear();
-            _axis = Vector3.zero;
+            locked = true;
+            solveEvent?.Invoke(doorsUnlocked);
         }
         
+        if(Input.GetKeyDown("w") && input == false){ 
+            input = true;
+            targetHolder.transform.Rotate(Vector3.left * rotateAngle, Space.World);
+        }
+        else if(Input.GetKeyDown("s") && input == false){
+            input = true;
+            targetHolder.transform.Rotate(Vector3.right * rotateAngle, Space.World);
+        }
+        else if(Input.GetKeyDown("a") && input == false){
+            input = true;
+            targetHolder.transform.Rotate(Vector3.up * rotateAngle, Space.World);
+        }
+        else if(Input.GetKeyDown("d") && input == false){
+            input = true;
+            targetHolder.transform.Rotate(Vector3.down * rotateAngle, Space.World);
+        }
+        else if (Input.GetKeyDown("r") && input == false){
+            input = true;
+            redo = true;
+        }
+
+        //CHECK FOR MOVEMENT TO AVOID "COMBO" ROTATIONS
+        if (Mathf.Abs(oldEulerAngles.magnitude - transform.rotation.eulerAngles.magnitude) < 0.2){
+            input = false;
+            redo = false;
+        } else{
+            oldEulerAngles = transform.transform.rotation.eulerAngles;
+        }
+    }
+
+    private void FixedUpdate()
+    {
+        if (redo)
+        {
+            Reset();
+        }
+        else
+        {
+            RotateAxis();
+        }
     }
 
 
-private bool CheckRotation()
+    private bool CheckRotation()
     {
         var x = transform.localRotation.eulerAngles.x;
         var y = transform.localRotation.eulerAngles.y;
@@ -97,7 +109,5 @@ private bool CheckRotation()
         return x < correctRotation.x + 1 && x > correctRotation.x - 1 && 
                y < correctRotation.y + 1 && y > correctRotation.y - 1 && 
                z < correctRotation.z + 1 && z > correctRotation.z - 1;
-
-        
     }
 }

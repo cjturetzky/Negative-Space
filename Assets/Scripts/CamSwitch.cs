@@ -7,7 +7,6 @@ public class CamSwitch : MonoBehaviour
 
     public GameObject myCamera;
     public GameObject playerCamera;
-    public CharacterController playerController;
 
     private float distanceToPlayer;
     private Transform myPosition;
@@ -44,19 +43,16 @@ public class CamSwitch : MonoBehaviour
     {
         playerCamera.SetActive(false);
         myCamera.SetActive(true);
-        playerController.enabled = false;
         _player.inPuzzle = true;
         _puzzle.locked = false;
-        //disable player movement
     }
 
     private void ExitPuzzle(int data)
     {
         myCamera.SetActive(false);
         playerCamera.SetActive(true);
-        playerController.enabled = true;
         _player.inPuzzle = false;
         _puzzle.locked = true;
-        //enable player movement
     }
+    
 }
