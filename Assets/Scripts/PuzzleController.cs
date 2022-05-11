@@ -106,8 +106,8 @@ public class PuzzleController : MonoBehaviour
         var y = transform.localRotation.eulerAngles.y;
         var z = transform.localRotation.eulerAngles.z;
         
-        return x < correctRotation.x + 1 && x > correctRotation.x - 1 && 
-               y < correctRotation.y + 1 && y > correctRotation.y - 1 && 
-               z < correctRotation.z + 1 && z > correctRotation.z - 1;
+        return x < correctRotation.x + 2.1 && x > correctRotation.x - 2.1 && 
+               y < correctRotation.y + 2.1 && y > correctRotation.y - 2.1 && 
+               z < correctRotation.z + 2.1 && z > correctRotation.z - 2.1;
     }
 }

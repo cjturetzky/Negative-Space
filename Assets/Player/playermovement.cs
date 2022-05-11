@@ -22,12 +22,10 @@ public class playermovement : MonoBehaviour
     {
         if (inPuzzle)
         {
-            //audio.Pause();
+            return;
         }
         else
         {
-            //audio.Play();
-            
             float x = Input.GetAxis("Horizontal");
             float z = Input.GetAxis("Vertical");
         
