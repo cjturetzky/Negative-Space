@@ -13,12 +13,14 @@ public class PuzzleController : MonoBehaviour
     public float smooth = 1f;
     public bool locked = true;
     public Vector3 correctRotation = Vector3.zero, offset = Vector3.zero;
-    
+
     private float _tempAngle;
     private Vector3 _axis = Vector3.zero;
     private Queue<Vector3> _queuedAxes;
+    
 
     public delegate void SolveDelegate(int data);
+
     public event SolveDelegate solveEvent;
     // To subscribe to the solveEvent, use FindObjectOfType<PuzzleController>().solveEvent += [YOUR METHOD HERE];
 
@@ -48,33 +50,33 @@ public class PuzzleController : MonoBehaviour
     void Update()
     {
         if (locked) return;
-        
+
         if (_queuedAxes.Count > 0)
         {
             RotateAxis();
-            
+
             if (CheckRotation())
             {
                 locked = true;
                 solveEvent?.Invoke(doorsUnlocked);
             }
         }
-        
+
         if (Input.GetKeyDown("w"))
         {
-            _queuedAxes.Enqueue(Vector3.up);
+            _queuedAxes.Enqueue(Vector3.right);
         }
         else if (Input.GetKeyDown("s"))
         {
-            _queuedAxes.Enqueue(Vector3.down);
+            _queuedAxes.Enqueue(Vector3.left);
         }
         else if (Input.GetKeyDown("a"))
         {
-            _queuedAxes.Enqueue(Vector3.left);
+            _queuedAxes.Enqueue(Vector3.up);
         }
         else if (Input.GetKeyDown("d"))
         {
-            _queuedAxes.Enqueue(Vector3.right);
+            _queuedAxes.Enqueue(Vector3.down);
         }
         else if (Input.GetKeyDown("r"))
         {
@@ -82,16 +84,31 @@ public class PuzzleController : MonoBehaviour
             _queuedAxes.Clear();
             _axis = Vector3.zero;
         }
+
+        if (CheckRotation())
+        {
+            //_queuedAxes.Enqueue(correctRotation);
+            //RotateAxis();
+            locked = true;
+            if (doorsUnlocked == 1)
+            {
+                solveEvent?.Invoke(doorsUnlocked);
+            }
+            solveEvent?.Invoke(doorsUnlocked);
+        }
     }
 
-    private bool CheckRotation()
+
+private bool CheckRotation()
     {
         var x = transform.localRotation.eulerAngles.x;
         var y = transform.localRotation.eulerAngles.y;
         var z = transform.localRotation.eulerAngles.z;
         
-        return x < correctRotation.x + 10 && x > correctRotation.x - 10 &&
-               y < correctRotation.y + 10 && y > correctRotation.y - 10 &&
-               z < correctRotation.z + 10 && z > correctRotation.z - 10;
-     }
+        return x < correctRotation.x + 1 && x > correctRotation.x - 1 && 
+               y < correctRotation.y + 1 && y > correctRotation.y - 1 && 
+               z < correctRotation.z + 1 && z > correctRotation.z - 1;
+
+        
+    }
 }
