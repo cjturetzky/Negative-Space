@@ -8,22 +8,33 @@ public class PressEScript : MonoBehaviour
 {
 
     public GameObject text;
-    
+    private bool disabled = false;
+
     private void Start()
     {
         text.gameObject.SetActive(true);
+        FindObjectOfType<PuzzleController>().solveEvent += Disable;
+    }
+
+    private void Disable(int data)
+    {
+        text.SetActive(false);
+        disabled = true;
     }
 
     private void Update()
     {
-        if (Input.GetKeyDown(KeyCode.E))
+        if (!disabled)
         {
-            text.gameObject.SetActive(false);
+            if (Input.GetKeyDown(KeyCode.E))
+            {
+                text.gameObject.SetActive(true);
+            }
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
-            text.gameObject.SetActive(true);
+            text.gameObject.SetActive(false);
         }
     }
 }

@@ -14,6 +14,8 @@ public class CamSwitch : MonoBehaviour
     private PuzzleController _puzzle;
     private playermovement _player;
 
+    private bool locked = false;
+
 
     void Start()
     {
@@ -23,21 +25,32 @@ public class CamSwitch : MonoBehaviour
 
         _puzzle = GetComponent<PuzzleController>();
         _puzzle.solveEvent += ExitPuzzle;
+        _puzzle.solveEvent += LockCamera;
         _player = GameObject.FindWithTag("Player").GetComponent<playermovement>();
+    }
+
+    private void LockCamera(int data)
+    {
+        locked = true;
     }
 
     void Update()
     {
-        distanceToPlayer = (myPosition.position - playerCamera.transform.position).magnitude;
-        if (Input.GetKeyDown(KeyCode.E) && distanceToPlayer < 5)
+        if (!locked)
         {
-            EnterPuzzle();
+            distanceToPlayer = (myPosition.position - playerCamera.transform.position).magnitude;
+            if (Input.GetKeyDown(KeyCode.E) && distanceToPlayer < 5)
+            {
+                EnterPuzzle();
+            }
+            
         }
-
+        
         if (Input.GetKeyDown(KeyCode.Escape))
         {
             ExitPuzzle(0);
         }
+
     }
 
     private void EnterPuzzle()
@@ -59,4 +72,5 @@ public class CamSwitch : MonoBehaviour
         _puzzle.locked = true;
         //enable player movement
     }
+    
 }
