@@ -43,8 +43,9 @@ public class PuzzleController : MonoBehaviour
     
     private void Reset()
     {
-        transform.rotation = Quaternion.Slerp (transform.rotation, reset.transform.rotation, smooth * Time.deltaTime);
-        targetHolder.transform.rotation = Quaternion.Slerp (transform.rotation, reset.transform.rotation, smooth * Time.deltaTime);
+        Transform tran = reset.transform;
+        targetHolder.transform.rotation = Quaternion.identity * Quaternion.Euler(tran.rotation.x, tran.rotation.y, tran.rotation.z);
+        transform.rotation = Quaternion.identity * Quaternion.Euler(tran.rotation.x, tran.rotation.y, tran.rotation.z);
     }
     
     void Update()
@@ -55,6 +56,7 @@ public class PuzzleController : MonoBehaviour
         {
             locked = true;
             solveEvent?.Invoke(doorsUnlocked);
+            transform.rotation = Quaternion.identity * Quaternion.Euler(0, 0, -90);
         }
         
         if(Input.GetKeyDown("w") && input == false){ 
