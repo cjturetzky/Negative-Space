@@ -7,7 +7,7 @@ public class EndGame : MonoBehaviour
 {
     private void OnTriggerEnter(Collider col){
         if(col.CompareTag("Player")){
-            Destroy(col);
+            //Destroy(col);
             SceneManager.LoadScene("End Credits", LoadSceneMode.Single);
         }
     }
