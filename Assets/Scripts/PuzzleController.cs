@@ -84,18 +84,7 @@ public class PuzzleController : MonoBehaviour
             _queuedAxes.Clear();
             _axis = Vector3.zero;
         }
-
-        if (CheckRotation())
-        {
-            //_queuedAxes.Enqueue(correctRotation);
-            //RotateAxis();
-            locked = true;
-            if (doorsUnlocked == 1)
-            {
-                solveEvent?.Invoke(doorsUnlocked);
-            }
-            solveEvent?.Invoke(doorsUnlocked);
-        }
+        
     }
 
 
