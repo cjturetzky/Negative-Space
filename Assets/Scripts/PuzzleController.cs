@@ -10,7 +10,7 @@ using UnityEngine.UIElements;
 public class PuzzleController : MonoBehaviour
 {
     public int rotateAngle = 45, doorsUnlocked = 1;
-    public float smooth = 1f;
+    public float smooth = 3f;
     public bool locked = true;
     public Vector3 correctRotation = Vector3.zero, offset = Vector3.zero;
 
@@ -40,6 +40,12 @@ public class PuzzleController : MonoBehaviour
 
             if (_queuedAxes.Count > 0)
             {
+                if (CheckRotation())
+                {
+                    locked = true;
+                    solveEvent?.Invoke(doorsUnlocked);
+                }
+                
                 _axis = _queuedAxes.Peek();
                 _queuedAxes.Dequeue();
             }
@@ -54,12 +60,6 @@ public class PuzzleController : MonoBehaviour
         if (_queuedAxes.Count > 0)
         {
             RotateAxis();
-
-            if (CheckRotation())
-            {
-                locked = true;
-                solveEvent?.Invoke(doorsUnlocked);
-            }
         }
 
         if (Input.GetKeyDown("w"))

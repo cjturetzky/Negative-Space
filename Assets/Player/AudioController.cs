@@ -20,6 +20,15 @@ public class AudioController : MonoBehaviour
     // Update is called once per frame
     void Update()
     {
+        if (_player.inPuzzle)
+        {
+            if (_audio.isPlaying)
+            {
+                _audio.Stop();
+            }
+
+            return;
+        }
         if (Mathf.Abs(_controller.velocity.sqrMagnitude) > 0 && !_audio.isPlaying)
         {
             _audio.Play();
