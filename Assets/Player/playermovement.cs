@@ -8,7 +8,7 @@ public class playermovement : MonoBehaviour
     public CharacterController controller;
     public float speed = 12f;
     public bool inPuzzle = false;
-    public AudioSource audio;
+    //public AudioSource audio;
 
     private float gravity = 9.8f;
     private float vSpeed = 0f;
