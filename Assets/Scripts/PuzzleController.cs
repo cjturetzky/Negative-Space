@@ -56,7 +56,7 @@ public class PuzzleController : MonoBehaviour
         {
             locked = true;
             solveEvent?.Invoke(doorsUnlocked);
-            transform.rotation = Quaternion.identity * Quaternion.Euler(0, 0, -90);
+            transform.rotation = Quaternion.identity * Quaternion.Euler(0, 0, 0);
         }
         
         if(Input.GetKeyDown("w") && input == false){ 
