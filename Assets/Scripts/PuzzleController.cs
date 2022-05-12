@@ -45,7 +45,7 @@ public class PuzzleController : MonoBehaviour
     {
         Transform tran = reset.transform;
         targetHolder.transform.rotation = Quaternion.identity * Quaternion.Euler(tran.rotation.x, tran.rotation.y, tran.rotation.z);
-        transform.rotation = Quaternion.identity * Quaternion.Euler(tran.rotation.x, tran.rotation.y, tran.rotation.z);
+        redo = false;
     }
     
     void Update()
@@ -83,7 +83,6 @@ public class PuzzleController : MonoBehaviour
         //CHECK FOR MOVEMENT TO AVOID "COMBO" ROTATIONS
         if (Mathf.Abs(oldEulerAngles.magnitude - transform.rotation.eulerAngles.magnitude) < 0.2){
             input = false;
-            redo = false;
         } else{
             oldEulerAngles = transform.transform.rotation.eulerAngles;
         }
